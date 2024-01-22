@@ -51,7 +51,7 @@ export class WishesController {
   @Patch(':id')
   @UseGuards(JwtGuard)
   updateOne(@Param('id') wishId: number, @AuthUser() user: User, @Body() updateWishDto: UpdateWishDto) {
-    return this.wishesService.updateInfo(wishId, user.id, updateWishDto);
+    return this.wishesService.update(wishId, user.id, updateWishDto);
   }
 
   @Delete(':id')

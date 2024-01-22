@@ -23,20 +23,11 @@ export class WishesService {
     return this.wishesRepository.findOneOrFail(query);
   }
 
-  async updateInfo(wishId: number, userId: number, updateWishDto: UpdateWishDto) {
+  async update(wishId: number, userId: number, updateWishDto: UpdateWishDto) {
     const wish = await this.wishesRepository.findOneOrFail({ where: { id: wishId }, relations: { owner: true, offers: true } });
     if (userId !== wish.owner.id) throw new ForbiddenException('Нельзя изменять чужие подарки');
     if (wish.offers.length && !!String(updateWishDto.price)) throw new BadRequestException('Нельзя изменять цену подарка, если есть офферы');
     return this.wishesRepository.update(wishId, updateWishDto);
-  }
-
-  async updateRaised(wishId: number, userId: number, amount: number) {
-    const wish = await this.wishesRepository.findOneOrFail({ where: { id: wishId }, relations: { owner: true } });
-    if (userId === wish.owner.id) throw new ForbiddenException('Нельзя скидываться себе на подарок');
-    if (wish.raised + amount > wish.price) throw new BadRequestException('Сумма превышает цену подарка');
-    return this.wishesRepository.update(
-      wishId,
-      { raised: wish.raised + amount});
   }
 
   async remove(wishId: number, userId: number) {
