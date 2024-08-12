@@ -12,7 +12,7 @@ async function bootstrap() {
   app.use(helmet());
   app.enableCors();
   const configService = app.get(ConfigService);
-  app.useGlobalPipes(new ValidationPipe({ transform: true }));
+  app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
   app.useGlobalFilters(new TypeORMErrorExceptionFilter());
   const document = SwaggerModule.createDocument(app, swaggerConfig());
   SwaggerModule.setup('api/docs', app, document);
